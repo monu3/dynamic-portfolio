@@ -1,0 +1,363 @@
+.skills-page {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.skills-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.section-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 25px 0;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .section-subtitle {
+  color: #5D4E37;
+}
+
+.theme-dark .section-subtitle {
+  color: #e8eaed;
+}
+
+.subtitle-icon {
+  display: flex;
+  align-items: center;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .subtitle-icon {
+  color: #D4AF37;
+}
+
+.theme-dark .subtitle-icon {
+  color: #64b5f6;
+}
+
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.skill-item {
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+}
+
+.theme-warm .skill-item {
+  background: rgba(212, 175, 55, 0.05);
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.theme-dark .skill-item {
+  background: rgba(100, 181, 246, 0.05);
+  border-color: rgba(100, 181, 246, 0.2);
+}
+
+.skill-item:hover {
+  transform: translateX(5px);
+}
+
+.theme-warm .skill-item:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #D4AF37;
+}
+
+.theme-dark .skill-item:hover {
+  background: rgba(100, 181, 246, 0.1);
+  border-color: #64b5f6;
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.skill-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skill-icon {
+  display: flex;
+  align-items: center;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .skill-icon {
+  color: #D4AF37;
+}
+
+.theme-dark .skill-icon {
+  color: #64b5f6;
+}
+
+.skill-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .skill-name {
+  color: #5D4E37;
+}
+
+.theme-dark .skill-name {
+  color: #e8eaed;
+}
+
+.skill-percentage {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .skill-percentage {
+  color: #D4AF37;
+}
+
+.theme-dark .skill-percentage {
+  color: #64b5f6;
+}
+
+.skill-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+.theme-warm .skill-bar {
+  background: rgba(139, 115, 85, 0.15);
+}
+
+.theme-dark .skill-bar {
+  background: rgba(100, 181, 246, 0.15);
+}
+
+.skill-progress {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease-out, background 0.5s ease;
+}
+
+.theme-warm .skill-progress {
+  background: linear-gradient(to right, #D4AF37, #C19B2F);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.theme-dark .skill-progress {
+  background: linear-gradient(to right, #64b5f6, #42a5f5);
+  box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.tech-card {
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.theme-warm .tech-card {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.theme-dark .tech-card {
+  background: rgba(100, 181, 246, 0.08);
+  border-color: rgba(100, 181, 246, 0.3);
+}
+
+.tech-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.theme-warm .tech-card:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: #D4AF37;
+}
+
+.theme-dark .tech-card:hover {
+  background: rgba(100, 181, 246, 0.15);
+  border-color: #64b5f6;
+}
+
+.tech-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.tech-icon {
+  display: flex;
+  align-items: center;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .tech-icon {
+  color: #D4AF37;
+}
+
+.theme-dark .tech-icon {
+  color: #64b5f6;
+}
+
+.tech-category {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .tech-category {
+  color: #5D4E37;
+}
+
+.theme-dark .tech-category {
+  color: #e8eaed;
+}
+
+.tech-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid;
+  transition: all 0.2s ease;
+}
+
+.theme-warm .tech-tag {
+  color: #6B5744;
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.theme-dark .tech-tag {
+  color: #bdc1c6;
+  background: rgba(100, 181, 246, 0.15);
+  border-color: rgba(100, 181, 246, 0.3);
+}
+
+.theme-warm .tech-tag:hover {
+  background: #D4AF37;
+  color: #FFF8DC;
+  border-color: #D4AF37;
+}
+
+.theme-dark .tech-tag:hover {
+  background: #64b5f6;
+  color: #1a1f2e;
+  border-color: #64b5f6;
+}
+
+.competencies-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.competency-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.theme-warm .competency-item {
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.theme-dark .competency-item {
+  background: rgba(100, 181, 246, 0.05);
+}
+
+.competency-item:hover {
+  transform: translateX(5px);
+}
+
+.theme-warm .competency-item:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.theme-dark .competency-item:hover {
+  background: rgba(100, 181, 246, 0.1);
+}
+
+.competency-bullet {
+  min-width: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 6px;
+  transition: background 0.5s ease;
+}
+
+.theme-warm .competency-bullet {
+  background: #D4AF37;
+}
+
+.theme-dark .competency-bullet {
+  background: #64b5f6;
+}
+
+.competency-item p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  transition: color 0.5s ease;
+}
+
+.theme-warm .competency-item p {
+  color: #6B5744;
+}
+
+.theme-dark .competency-item p {
+  color: #bdc1c6;
+}
+
+@media (max-width: 768px) {
+  .tech-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .competencies-grid {
+    grid-template-columns: 1fr;
+  }
+}

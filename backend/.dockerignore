@@ -1,0 +1,28 @@
+# Maven build artifacts
+target/
+*.class
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*
+
+# Logs
+*.log
+
+# Test files
+src/test/
+
+# System files
+.DS_Store
+Thumbs.db
