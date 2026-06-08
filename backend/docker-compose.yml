@@ -1,0 +1,13 @@
+services:
+  portfolio-backend:
+    build: .
+    ports:
+      - 8080:8080
+    image: portfolio-backend
+    container_name: portfolio-backend
+    networks:
+      - portfolio-network
+
+networks:
+  portfolio-network:
+    external: true
