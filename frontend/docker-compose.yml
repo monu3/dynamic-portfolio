@@ -1,8 +1,13 @@
-version: '3.8'
-
 services:
-  react-app:
+  portfolio-frontend:
     build: .
     ports:
       - "3000:80"
-    container_name: monu-portfolio-frontend
+    image: portfolio-frontend
+    container_name: portfolio-frontend
+    networks:
+      - portfolio-network
+
+networks:
+  portfolio-network:
+    external: true
