@@ -22,10 +22,13 @@ spec:
     spec:
       containers:
         - name: portfolio-backend
-          image: portfolio-backend:latest
+          image: monusiddiki/portfolio-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: db-config
 ---
 apiVersion: v1
 kind: Service
@@ -60,7 +63,7 @@ spec:
     spec:
       containers:
         - name: portfolio-frontend
-          image: portfolio-frontend:latest
+          image: monusiddiki/portfolio-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -95,7 +98,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: portfolio.local
+    - host: ""
       http:
         paths:
           - path: /api
