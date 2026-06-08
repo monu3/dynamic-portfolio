@@ -1,0 +1,38 @@
+Thank you for installing the portfolio chart.
+
+=== For Local Development ===
+Add to /etc/hosts:
+  127.0.0.1 portfolio.local
+
+Then visit:
+  http://portfolio.local/
+
+=== For Linux Server ===
+Use one of these options:
+
+1. With a domain name:
+   helm install portfolio helm/portfolio --namespace portfolio \
+     --set ingress.hosts[0].host=portfolio.example.com
+
+2. With server IP (auto-resolving with nip.io):
+   helm install portfolio helm/portfolio --namespace portfolio \
+     --set ingress.hosts[0].host=192.168.1.100.nip.io
+
+3. With a custom hostname:
+   helm install portfolio helm/portfolio --namespace portfolio \
+     --set ingress.hosts[0].host=portfolio.yourdomain.com
+
+Backend API is available at:
+  http://<your-hostname>/api
+
+Frontend is available at:
+  http://<your-hostname>/
+
+=== Upgrade Examples ===
+Change hostname:
+  helm upgrade portfolio helm/portfolio --namespace portfolio \
+    --set ingress.hosts[0].host=newhost.example.com
+
+Update backend image:
+  helm upgrade portfolio helm/portfolio --namespace portfolio \
+    --set backend.image.tag=v1.0.0
