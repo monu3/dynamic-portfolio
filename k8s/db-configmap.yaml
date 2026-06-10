@@ -4,8 +4,8 @@ metadata:
   name: db-config
   namespace: portfolio
 data:
-  DB_HOST: "192.168.1.105"          # ← Change to your actual server IP
+  DB_HOST: "172.31.1.192"          # ← Change to your actual server IP
   DB_PORT: "5432"
   DB_NAME: "portfolio_db"           # Change as per your database
-  DB_USER: "portfolio_user"
-  DB_PASSWORD: "portfolio_pass123"  # ⚠️ Not secure! Use Secret for production
+  DB_USER: "postgres"
+  DB_PASSWORD: "D0!T@.db"  # ⚠️ Not secure! Use Secret for production

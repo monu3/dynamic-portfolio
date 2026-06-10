@@ -11,7 +11,12 @@ metadata:
   labels:
     app: portfolio-backend
 spec:
-  replicas: 2
+  replicas: 1
+  strategy:                  # ← Add this
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 50%
   selector:
     matchLabels:
       app: portfolio-backend
@@ -29,6 +34,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: db-config
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -52,7 +64,12 @@ metadata:
   labels:
     app: portfolio-frontend
 spec:
-  replicas: 2
+  replicas: 1
+  strategy:                  # ← Add this
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 50%
   selector:
     matchLabels:
       app: portfolio-frontend
@@ -67,6 +84,13 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
           readinessProbe:
             httpGet:
               path: /
