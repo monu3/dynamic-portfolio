@@ -1,0 +1,9 @@
+# =====================================================
+# NAMESPACE
+# =====================================================
+# Creates an isolated namespace to keep portfolio resources separate
+# from other applications in the cluster
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portfolio # All portfolio resources will use this namespace

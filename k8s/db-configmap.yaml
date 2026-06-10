@@ -1,11 +1,36 @@
+# =====================================================
+# Database Configuration ConfigMap
+# =====================================================
+# This ConfigMap stores non-sensitive database configuration
+# that needs to be shared with pod containers.
+#
+# NOTE: Sensitive data like passwords should ideally be stored
+# in Kubernetes Secrets instead of ConfigMap for better security.
+#
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: db-config
-  namespace: portfolio
+  name: db-config # Name of the ConfigMap resource
+  namespace: portfolio # Namespace where this ConfigMap resides
+
+# Data section contains key-value pairs that will be made available
+# as environment variables to containers via envFrom directive
 data:
-  DB_HOST: "172.31.1.192"          # ← Change to your actual server IP
+  # Database host IP address or hostname
+  # CHANGE THIS: Replace with your actual database server IP
+  DB_HOST: "172.31.1.192"
+
+  # PostgreSQL default port number
   DB_PORT: "5432"
-  DB_NAME: "portfolio_db"           # Change as per your database
+
+  # Name of the database to connect to
+  # CHANGE THIS: Update to match your actual database name
+  DB_NAME: "portfolio_db"
+
+  # Database user for authentication
   DB_USER: "postgres"
-  DB_PASSWORD: "D0!T@.db"  # ⚠️ Not secure! Use Secret for production
+
+  # Database password for authentication
+  # ⚠️ SECURITY WARNING: This is NOT secure!
+  # For production environments, use Kubernetes Secret instead
+  DB_PASSWORD: "D0!T@.db"
