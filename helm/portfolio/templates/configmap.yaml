@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "portfolio.fullname" . }}-db-secret
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "portfolio.name" . }}-backend
+type: Opaque
+stringData:
+  # These values are injected from .Values.dbSecret. Using `stringData`
+  # allows you to keep plain string values in the template that
+  # Kubernetes will store as base64-encoded data.
+  DB_HOST: "{{ .Values.dbSecret.DB_HOST }}"
+  DB_PORT: "{{ .Values.dbSecret.DB_PORT }}"
+  DB_NAME: "{{ .Values.dbSecret.DB_NAME }}"
+  DB_USER: "{{ .Values.dbSecret.DB_USER }}"
+  DB_PASSWORD: "{{ .Values.dbSecret.DB_PASSWORD }}"
+
+# SECURITY NOTE: Do not commit real secrets into source control.
+# Prefer using Helm secrets plugins, external secret managers, or
+# pass values at deploy time (e.g., `helm install --set dbSecret.DB_PASSWORD=...`).
