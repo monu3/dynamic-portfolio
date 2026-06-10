@@ -21,3 +21,18 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.backend.containerPort }}
+          envFrom:
+            - secretRef:
+                name: {{ template "portfolio.fullname" . }}-db-secret
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+  strategy:
+    type: {{ .Values.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}

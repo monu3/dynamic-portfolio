@@ -13,6 +13,26 @@ frontend:
     pullPolicy: IfNotPresent
   containerPort: 80
   servicePort: 8082
+  # Resource requests/limits for frontend container
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "300m"
+      memory: "256Mi"
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 50%
+      # Note: percentages are supported by k8s
 ingress:
   enabled: true
   annotations:
@@ -37,3 +57,39 @@ resources: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# -----------------------------------------------------
+# Database secret values (rendered into a Kubernetes Secret)
+# These values will be placed into a Secret and referenced by
+# the backend Deployment via `envFrom: secretRef`.
+# For production, consider sourcing these from an external
+# secret manager and avoid checking secrets into git.
+# -----------------------------------------------------
+dbSecret:
+  DB_HOST: "172.31.1.192"
+  DB_PORT: "5432"
+  DB_NAME: "portfolio_db"
+  DB_USER: "postgres"
+  DB_PASSWORD: "D0!T@.db"
+
+# -----------------------------------------------------
+# Horizontal Pod Autoscaler settings
+# Define per-component HPA configuration here
+# -----------------------------------------------------
+hpa:
+  enabled: true
+  backend:
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 50
+  frontend:
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 50
+
+# Deployment-wide default strategy (can be overridden per-component)
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 25%
+    maxSurge: 50%

@@ -21,3 +21,22 @@ spec:
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.frontend.containerPort }}
+          resources:
+            requests:
+              cpu: "{{ .Values.frontend.resources.requests.cpu }}"
+              memory: "{{ .Values.frontend.resources.requests.memory }}"
+            limits:
+              cpu: "{{ .Values.frontend.resources.limits.cpu }}"
+              memory: "{{ .Values.frontend.resources.limits.memory }}"
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.frontend.readinessProbe.httpGet.path }}
+              port: {{ .Values.frontend.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.frontend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.frontend.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.frontend.readinessProbe.failureThreshold }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}

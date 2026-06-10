@@ -1,0 +1,45 @@
+{{- if .Values.hpa.enabled }}
+# HorizontalPodAutoscaler for backend
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "portfolio.fullname" . }}-backend-hpa
+  namespace: {{ .Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "portfolio.fullname" . }}-backend
+  minReplicas: {{ .Values.hpa.backend.minReplicas }}
+  maxReplicas: {{ .Values.hpa.backend.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.backend.targetCPUUtilizationPercentage }}
+
+---
+
+# HorizontalPodAutoscaler for frontend
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "portfolio.fullname" . }}-frontend-hpa
+  namespace: {{ .Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "portfolio.fullname" . }}-frontend
+  minReplicas: {{ .Values.hpa.frontend.minReplicas }}
+  maxReplicas: {{ .Values.hpa.frontend.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.frontend.targetCPUUtilizationPercentage }}
+{{- end }}

@@ -1,0 +1,86 @@
+# =====================================================
+# FRONTEND DEPLOYMENT
+# =====================================================
+# Defines how the frontend React application should be deployed
+# and managed by Kubernetes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-frontend # Name of the deployment
+  namespace: portfolio # Deploy in portfolio namespace
+  labels:
+    app: portfolio-frontend # Label for organization and selection
+spec:
+  # Number of pod replicas to create initially
+  replicas: 1
+
+  # Strategy for updating pods to new versions
+  strategy:
+    type: RollingUpdate # Gradually replace old pods with new ones
+    rollingUpdate:
+      maxUnavailable: 25% # Keep 75% of pods available during update
+      maxSurge: 50% # Allow 150% total pods during update
+
+  # Label selector to identify pods managed by this deployment
+  selector:
+    matchLabels:
+      app: portfolio-frontend # Select pods with this label
+
+  # Template for creating new pod replicas
+  template:
+    metadata:
+      labels:
+        app: portfolio-frontend # Label each pod for service discovery
+    spec:
+      containers:
+        - name: portfolio-frontend # Container name within the pod
+          image: monusiddiki/portfolio-frontend:latest # Docker image to use
+          imagePullPolicy: IfNotPresent # Don't pull if image exists locally
+          ports:
+            - containerPort: 80 # Port the Nginx server listens on
+
+          # Resource requests and limits for cluster scheduling
+          resources:
+            # Minimum resources required to schedule this pod
+            requests:
+              cpu: "100m" # 100 millicores (0.1 CPU)
+              memory: "128Mi" # 128 Megabytes of RAM
+            # Maximum resources the container can use
+            limits:
+              cpu: "300m" # 300 millicores (0.3 CPU)
+              memory: "256Mi" # 256 Megabytes of RAM
+
+          # Probe to check if the container is ready to serve traffic
+          # If failed, Kubernetes removes the pod from service temporarily
+          readinessProbe:
+            httpGet: # Check readiness using HTTP GET
+              path: / # Request root path
+              port: 80 # On port 80
+            initialDelaySeconds: 5 # Wait 5 seconds before first check
+            periodSeconds: 10 # Check every 10 seconds
+            failureThreshold: 3 # Mark unhealthy after 3 consecutive failures             # Mark unhealthy after 3 consecutive failures
+
+---
+# =====================================================
+# FRONTEND SERVICE
+# =====================================================
+# Creates an internal DNS entry and load balancer for the frontend
+# Other pods can access it via 'portfolio-frontend:8082'
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-frontend # Service name (used as DNS hostname)
+  namespace: portfolio # Service in portfolio namespace
+spec:
+  # Select pods to expose
+  selector:
+    app: portfolio-frontend # Route traffic to frontend pods
+
+  # Port mapping configuration
+  ports:
+    - protocol: TCP # Communication protocol
+      port: 8082 # Internal service port (accessed by other pods)
+      targetPort: 80 # Container port to forward traffic to
+
+  # Service type
+  type: ClusterIP # Internal-only service (not accessible from outside cluster)

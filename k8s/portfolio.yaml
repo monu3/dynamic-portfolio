@@ -1,117 +1,185 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: portfolio
----
+# =====================================================
+# Portfolio Application Kubernetes Configuration
+# =====================================================
+# This file defines all Kubernetes resources needed to deploy
+# and manage the portfolio application (backend + frontend).
+#
+# Resources included:
+# 1. Namespace - Isolated environment for portfolio app
+# 2. Backend Deployment - Spring Boot API server
+# 3. Backend Service - Exposes backend internally
+# 4. Frontend Deployment - React/Nginx web server
+# 5. Frontend Service - Exposes frontend internally
+# 6. Ingress - Routes external traffic to services
+#
+
+
+# =====================================================
+# BACKEND DEPLOYMENT
+# =====================================================
+# Defines how the backend Spring Boot application should be deployed
+# and managed by Kubernetes
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: portfolio-backend
-  namespace: portfolio
+  name: portfolio-backend # Name of the deployment
+  namespace: portfolio # Deploy in portfolio namespace
   labels:
-    app: portfolio-backend
+    app: portfolio-backend # Label for organization and selection
 spec:
-  replicas: 2
+  # Number of pod replicas to create initially
+  replicas: 1
+
+  # Strategy for updating pods to new versions
+  strategy:
+    type: RollingUpdate # Gradually replace old pods with new ones
+    rollingUpdate:
+      maxUnavailable: 25% # Keep 75% of pods available during update
+      maxSurge: 50% # Allow 150% total pods during update
+
+  # Label selector to identify pods managed by this deployment
   selector:
     matchLabels:
-      app: portfolio-backend
+      app: portfolio-backend # Select pods with this label
+
+  # Template for creating new pod replicas
   template:
     metadata:
       labels:
-        app: portfolio-backend
+        app: portfolio-backend # Label each pod for service discovery
     spec:
       containers:
-        - name: portfolio-backend
-          image: monusiddiki/portfolio-backend:latest
-          imagePullPolicy: IfNotPresent
+        - name: portfolio-backend # Container name within the pod
+          image: monusiddiki/portfolio-backend:latest # Docker image to use
+          imagePullPolicy: IfNotPresent # Don't pull if image exists locally
           ports:
-            - containerPort: 8080
+            - containerPort: 8080 # Port the application listens on inside container
+
+          # Load configuration from ConfigMap as environment variables
           envFrom:
             - configMapRef:
-                name: db-config
+                name: db-config # Reference to database config ConfigMap
+
+          # Resource requests and limits for cluster scheduling
+          resources:
+            # Minimum resources required to schedule this pod
+            requests:
+              cpu: "200m" # 200 millicores (0.2 CPU)
+              memory: "256Mi" # 256 Megabytes of RAM
+            # Maximum resources the container can use
+            limits:
+              cpu: "500m" # 500 millicores (0.5 CPU)
+              memory: "512Mi" # 512 Megabytes of RAM
+
 ---
+# =====================================================
+# BACKEND SERVICE
+# =====================================================
+# Creates an internal DNS entry and load balancer for the backend
+# Other pods can access it via 'portfolio-backend:8081'
 apiVersion: v1
 kind: Service
 metadata:
-  name: portfolio-backend
-  namespace: portfolio
+  name: portfolio-backend # Service name (used as DNS hostname)
+  namespace: portfolio # Service in portfolio namespace
 spec:
+  # Select pods to expose
   selector:
-    app: portfolio-backend
+    app: portfolio-backend # Route traffic to backend pods
+
+  # Port mapping configuration
   ports:
-    - protocol: TCP
-      port: 8081
-      targetPort: 8080
-  type: ClusterIP
+    - protocol: TCP # Communication protocol
+      port: 8081 # Internal service port (accessed by other pods)
+      targetPort: 8080 # Container port to forward traffic to
+
+  # Service type
+  type: ClusterIP # Internal-only service (not accessible from outside cluster)
+
 ---
+# =====================================================
+# FRONTEND DEPLOYMENT
+# =====================================================
+# Defines how the frontend React application should be deployed
+# and managed by Kubernetes
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: portfolio-frontend
-  namespace: portfolio
+  name: portfolio-frontend # Name of the deployment
+  namespace: portfolio # Deploy in portfolio namespace
   labels:
-    app: portfolio-frontend
+    app: portfolio-frontend # Label for organization and selection
 spec:
-  replicas: 2
+  # Number of pod replicas to create initially
+  replicas: 1
+
+  # Strategy for updating pods to new versions
+  strategy:
+    type: RollingUpdate # Gradually replace old pods with new ones
+    rollingUpdate:
+      maxUnavailable: 25% # Keep 75% of pods available during update
+      maxSurge: 50% # Allow 150% total pods during update
+
+  # Label selector to identify pods managed by this deployment
   selector:
     matchLabels:
-      app: portfolio-frontend
+      app: portfolio-frontend # Select pods with this label
+
+  # Template for creating new pod replicas
   template:
     metadata:
       labels:
-        app: portfolio-frontend
+        app: portfolio-frontend # Label each pod for service discovery
     spec:
       containers:
-        - name: portfolio-frontend
-          image: monusiddiki/portfolio-frontend:latest
-          imagePullPolicy: IfNotPresent
+        - name: portfolio-frontend # Container name within the pod
+          image: monusiddiki/portfolio-frontend:latest # Docker image to use
+          imagePullPolicy: IfNotPresent # Don't pull if image exists locally
           ports:
-            - containerPort: 80
+            - containerPort: 80 # Port the Nginx server listens on
+
+          # Resource requests and limits for cluster scheduling
+          resources:
+            # Minimum resources required to schedule this pod
+            requests:
+              cpu: "100m" # 100 millicores (0.1 CPU)
+              memory: "128Mi" # 128 Megabytes of RAM
+            # Maximum resources the container can use
+            limits:
+              cpu: "300m" # 300 millicores (0.3 CPU)
+              memory: "256Mi" # 256 Megabytes of RAM
+
+          # Probe to check if the container is ready to serve traffic
+          # If failed, Kubernetes removes the pod from service temporarily
           readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 3
+            httpGet: # Check readiness using HTTP GET
+              path: / # Request root path
+              port: 80 # On port 80
+            initialDelaySeconds: 5 # Wait 5 seconds before first check
+            periodSeconds: 10 # Check every 10 seconds
+            failureThreshold: 3 # Mark unhealthy after 3 consecutive failures             # Mark unhealthy after 3 consecutive failures
+
 ---
+# =====================================================
+# FRONTEND SERVICE
+# =====================================================
+# Creates an internal DNS entry and load balancer for the frontend
+# Other pods can access it via 'portfolio-frontend:8082'
 apiVersion: v1
 kind: Service
 metadata:
-  name: portfolio-frontend
-  namespace: portfolio
+  name: portfolio-frontend # Service name (used as DNS hostname)
+  namespace: portfolio # Service in portfolio namespace
 spec:
+  # Select pods to expose
   selector:
-    app: portfolio-frontend
+    app: portfolio-frontend # Route traffic to frontend pods
+
+  # Port mapping configuration
   ports:
-    - protocol: TCP
-      port: 8082
-      targetPort: 80
-  type: ClusterIP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: portfolio-ingress
-  namespace: portfolio
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  rules:
-    - host: ""
-      http:
-        paths:
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: portfolio-backend
-                port:
-                  number: 8081
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: portfolio-frontend
-                port:
-                  number: 8082
+    - protocol: TCP # Communication protocol
+      port: 8082 # Internal service port (accessed by other pods)
+      targetPort: 80 # Container port to forward traffic to
+
+  # Service type
+  type: ClusterIP # Internal-only service (not accessible from outside cluster)

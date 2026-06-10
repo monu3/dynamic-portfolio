@@ -1,0 +1,63 @@
+# =====================================================
+# Horizontal Pod Autoscaler (HPA) Configuration
+# =====================================================
+# HPAs automatically scale the number of pod replicas based on
+# resource usage metrics (CPU, memory, or custom metrics).
+#
+# This file defines scaling policies for both backend and frontend.
+#
+
+# --- BACKEND AUTOSCALER ---
+# Automatically scales the portfolio-backend deployment based on CPU usage
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: portfolio-backend-hpa # Name of this HPA resource
+  namespace: portfolio # Namespace containing the deployment
+spec:
+  # Reference to the deployment that will be scaled
+  scaleTargetRef:
+    apiVersion: apps/v1 # Kubernetes API version for Deployment
+    kind: Deployment # Resource type to scale
+    name: portfolio-backend # Name of the deployment to manage
+
+  # Replica scaling limits
+  minReplicas: 2 # Minimum number of pods (always keep 2 running)
+  maxReplicas: 10 # Maximum number of pods (don't exceed 10)
+
+  # Metrics that trigger scaling
+  metrics:
+    - type: Resource # Scale based on resource metrics
+      resource:
+        name: cpu # Monitor CPU usage
+        target:
+          type: Utilization # Use utilization percentage
+          averageUtilization: 50 # Scale up when avg CPU > 50%, down when < 50%
+
+---
+# --- FRONTEND AUTOSCALER ---
+# Automatically scales the portfolio-frontend deployment based on CPU usage
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: portfolio-frontend-hpa # Name of this HPA resource
+  namespace: portfolio # Namespace containing the deployment
+spec:
+  # Reference to the deployment that will be scaled
+  scaleTargetRef:
+    apiVersion: apps/v1 # Kubernetes API version for Deployment
+    kind: Deployment # Resource type to scale
+    name: portfolio-frontend # Name of the deployment to manage
+
+  # Replica scaling limits
+  minReplicas: 2 # Minimum number of pods (always keep 2 running)
+  maxReplicas: 8 # Maximum number of pods (don't exceed 8)
+
+  # Metrics that trigger scaling
+  metrics:
+    - type: Resource # Scale based on resource metrics
+      resource:
+        name: cpu # Monitor CPU usage
+        target:
+          type: Utilization # Use utilization percentage
+          averageUtilization: 50 # Scale up when avg CPU > 50%, down when < 50%
